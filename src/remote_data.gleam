@@ -104,17 +104,17 @@ pub fn map_error(
 ///
 /// ## Examples
 /// ```gleam
-/// and_then(over: Success(42), with: fn(x) { Success(x * 2) })
+/// try(over: Success(42), with: fn(x) { Success(x * 2) })
 /// // -> Success(84)
 /// ```
 ///
 /// ```gleam
-/// and_then(over: Failure("error"), with: fn(x) { Success(x * 2) })
+/// try(over: Failure("error"), with: fn(x) { Success(x * 2) })
 /// // -> Failure("error")
 /// ```
 ///
 /// ```gleam
-/// and_then(over: Success(42), with: fn(x) { Failure("error") })
+/// try(over: Success(42), with: fn(x) { Failure("error") })
 /// // -> Failure("error")
 /// ```
 pub fn try(
