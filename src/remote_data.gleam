@@ -14,12 +14,12 @@ pub type RemoteData(a, error) {
 ///
 /// ## Examples
 /// ```gleam
-/// map(over: Success(42), with: fn(x) { x * 2 })
-/// // -> Success(84)
+/// map(over: Success(1), with: int.to_string)
+/// // -> Success("1")
 /// ```
 ///
 /// ```gleam
-/// map(over: Failure("error"), with: fn(x) { x * 2 })
+/// map(over: Failure("error"), with: int.to_string)
 /// // -> Failure("error")
 /// ```
 pub fn map(
@@ -38,8 +38,8 @@ pub fn map(
 ///
 /// ## Examples
 /// ```gleam
-/// map_2(over: Success(42), over_2: Success(2), with: fn(a, b) { a + b })
-/// // -> Success(44)
+/// map_2(over: Success(1), over_2: Success(2), with: fn(a, b) { a + b })
+/// // -> Success(3)
 /// ```
 ///
 /// ```gleam
@@ -104,8 +104,8 @@ pub fn map_error(
 ///
 /// ## Examples
 /// ```gleam
-/// try(over: Success(42), with: fn(x) { Success(x * 2) })
-/// // -> Success(84)
+/// try(over: Success(1), with: fn(x) { Success(x * 2) })
+/// // -> Success(2)
 /// ```
 ///
 /// ```gleam
@@ -114,7 +114,7 @@ pub fn map_error(
 /// ```
 ///
 /// ```gleam
-/// try(over: Success(42), with: fn(x) { Failure("error") })
+/// try(over: Success(1), with: fn(x) { Failure("error") })
 /// // -> Failure("error")
 /// ```
 pub fn try(
@@ -132,12 +132,12 @@ pub fn try(
 /// Unwrap a RemoteData, providing a default value if the data is not Success
 /// ## Examples
 /// ```gleam
-/// unwrap(data: Success(42), or: 0)
-/// // -> 42
+/// unwrap(Success(1), or: 0)
+/// // -> 1
 /// ```
 ///
 /// ```gleam
-/// unwrap(data: Failure("error"), or: 0)
+/// unwrap(Failure("error"), or: 0)
 /// // -> 0
 /// ```
 pub fn unwrap(data: RemoteData(a, error), or default: a) -> a {
@@ -150,12 +150,12 @@ pub fn unwrap(data: RemoteData(a, error), or default: a) -> a {
 /// Convert a RemoteData to an Option
 /// ## Examples
 /// ```gleam
-/// to_option(data: Success(42))
-/// // -> Some(42)
+/// to_option(Success(1))
+/// // -> Some(1)
 /// ```
 ///
 /// ```gleam
-/// to_option(data: Failure("error"))
+/// to_option(Failure("error"))
 /// // -> None
 /// ```
 pub fn to_option(data: RemoteData(a, error)) -> Option(a) {
@@ -168,8 +168,8 @@ pub fn to_option(data: RemoteData(a, error)) -> Option(a) {
 /// Convert an Option to a RemoteData
 /// ## Examples
 /// ```gleam
-/// from_option(option: Some(42), or: "error")
-/// // -> Success(42)
+/// from_option(option: Some(1), or: "error")
+/// // -> Success(1)
 /// ```
 ///
 /// ```gleam
@@ -187,17 +187,17 @@ pub fn from_option(option: Option(a), or error: error) -> RemoteData(a, error) {
 /// If the data is NotAsked or Loading, it will be converted to an Error with the provided error
 /// ## Examples
 /// ```gleam
-/// to_result(data: Success(42), or: "error")
-/// // -> Ok(42)
+/// to_result(Success(1), or: "error")
+/// // -> Ok(1)
 /// ```
 ///
 /// ```gleam
-/// to_result(data: Failure("error"), or: "another error")
+/// to_result(Failure("error"), or: "another error")
 /// // -> Error("error")
 /// ```
 ///
 /// ```gleam
-/// to_result(data: Loading, or: "another error")
+/// to_result(Loading, or: "another error")
 /// // -> Error("another error")
 /// ```
 pub fn to_result(
@@ -214,8 +214,8 @@ pub fn to_result(
 /// Convert a Result to a RemoteData
 /// ## Examples
 /// ```gleam
-/// from_result(result: Ok(42))
-/// // -> Success(42)
+/// from_result(result: Ok(1))
+/// // -> Success(1)
 /// ```
 ///
 /// ```gleam
@@ -232,12 +232,12 @@ pub fn from_result(result: Result(a, error)) -> RemoteData(a, error) {
 /// Convert a list of RemoteData to a RemoteData of a list
 /// ## Examples
 /// ```gleam
-/// from_list([Success(42), Success(43)])
-/// // -> Success([42, 43])
+/// from_list([Success(1), Success(2)])
+/// // -> Success([1, 2])
 /// ```
 ///
 /// ```gleam
-/// from_list([Success(42), Failure("error")])
+/// from_list([Success(1), Failure("error")])
 /// // -> Failure("error")
 /// ```
 pub fn from_list(
@@ -252,7 +252,7 @@ pub fn from_list(
 /// Check if a RemoteData is a Success
 /// ## Examples
 /// ```gleam
-/// is_not_asked(Success(42))
+/// is_not_asked(Success(1))
 /// // -> False
 /// ```
 ///
@@ -270,13 +270,13 @@ pub fn is_not_asked(data: RemoteData(_, _)) -> Bool {
 /// Check if a RemoteData is a Success
 /// ## Examples
 /// ```gleam
-/// is_loading(Success(42))
-/// // -> True
+/// is_loading(Success(1))
+/// // -> False
 /// ```
 ///
 /// ```gleam
-/// is_loading(Failure("error"))
-/// // -> False
+/// is_loading(Loading)
+/// // -> True
 /// ```
 pub fn is_loading(data: RemoteData(_, _)) -> Bool {
   case data {
@@ -288,13 +288,13 @@ pub fn is_loading(data: RemoteData(_, _)) -> Bool {
 /// Check if a RemoteData is a Success
 /// ## Examples
 /// ```gleam
-/// is_failure(Success(42))
-/// // -> True
+/// is_failure(Success(1))
+/// // -> False
 /// ```
 ///
 /// ```gleam
 /// is_failure(Failure("error"))
-/// // -> False
+/// // -> True
 /// ```
 pub fn is_failure(data: RemoteData(_, _)) -> Bool {
   case data {
@@ -306,7 +306,7 @@ pub fn is_failure(data: RemoteData(_, _)) -> Bool {
 /// Check if a RemoteData is a Success
 /// ## Examples
 /// ```gleam
-/// is_success(Success(42))
+/// is_success(Success(1))
 /// // -> True
 /// ```
 ///
