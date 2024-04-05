@@ -38,12 +38,12 @@ pub fn map(
 ///
 /// ## Examples
 /// ```gleam
-/// map_2(over: Success(1), over_2: Success(2), with: fn(a, b) { a + b })
+/// map_2(over: Success(1), over2: Success(2), with: fn(a, b) { a + b })
 /// // -> Success(3)
 /// ```
 ///
 /// ```gleam
-/// map_2(over: Failure("error"), over_2: Success(2), with: fn(a, b) { a + b })
+/// map_2(over: Failure("error"), over2: Success(2), with: fn(a, b) { a + b })
 /// // -> Failure("error")
 /// ```
 pub fn map2(
@@ -63,8 +63,8 @@ pub fn map2(
 /// Check `map2` for more details
 pub fn map3(
   over data1: RemoteData(a, error),
-  over_2 data2: RemoteData(b, error),
-  over_3 data3: RemoteData(c, error),
+  over2 data2: RemoteData(b, error),
+  over3 data3: RemoteData(c, error),
   with mapper: fn(a, b, c) -> d,
 ) -> RemoteData(d, error) {
   case data1, data2, data3 {
@@ -168,12 +168,12 @@ pub fn to_option(data: RemoteData(a, error)) -> Option(a) {
 /// Convert an Option to a RemoteData
 /// ## Examples
 /// ```gleam
-/// from_option(option: Some(1), or: "error")
+/// from_option(Some(1), or: "error")
 /// // -> Success(1)
 /// ```
 ///
 /// ```gleam
-/// from_option(option: None, or: "error")
+/// from_option(None, or: "error")
 /// // -> Failure("error")
 /// ```
 pub fn from_option(option: Option(a), or error: error) -> RemoteData(a, error) {
@@ -214,12 +214,12 @@ pub fn to_result(
 /// Convert a Result to a RemoteData
 /// ## Examples
 /// ```gleam
-/// from_result(result: Ok(1))
+/// from_result(Ok(1))
 /// // -> Success(1)
 /// ```
 ///
 /// ```gleam
-/// from_result(result: Error("error"))
+/// from_result(Error("error"))
 /// // -> Failure("error")
 /// ```
 pub fn from_result(result: Result(a, error)) -> RemoteData(a, error) {
